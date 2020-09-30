@@ -1,0 +1,41 @@
+{
+  "url": "https://api.github.com/repos/fastai/fastai/releases/31271526",
+  "assets_url": "https://api.github.com/repos/fastai/fastai/releases/31271526/assets",
+  "upload_url": "https://uploads.github.com/repos/fastai/fastai/releases/31271526/assets{?name,label}",
+  "html_url": "https://github.com/fastai/fastai/releases/tag/2.0.11",
+  "id": 31271526,
+  "node_id": "MDc6UmVsZWFzZTMxMjcxNTI2",
+  "tag_name": "2.0.11",
+  "target_commitish": "master",
+  "name": "2.0.11",
+  "draft": false,
+  "author": {
+    "login": "jph00",
+    "id": 346999,
+    "node_id": "MDQ6VXNlcjM0Njk5OQ==",
+    "avatar_url": "https://avatars1.githubusercontent.com/u/346999?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/jph00",
+    "html_url": "https://github.com/jph00",
+    "followers_url": "https://api.github.com/users/jph00/followers",
+    "following_url": "https://api.github.com/users/jph00/following{/other_user}",
+    "gists_url": "https://api.github.com/users/jph00/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/jph00/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/jph00/subscriptions",
+    "organizations_url": "https://api.github.com/users/jph00/orgs",
+    "repos_url": "https://api.github.com/users/jph00/repos",
+    "events_url": "https://api.github.com/users/jph00/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/jph00/received_events",
+    "type": "User",
+    "site_admin": false
+  },
+  "prerelease": false,
+  "created_at": "2020-09-14T16:29:13Z",
+  "published_at": "2020-09-14T16:29:31Z",
+  "assets": [
+
+  ],
+  "tarball_url": "https://api.github.com/repos/fastai/fastai/tarball/2.0.11",
+  "zipball_url": "https://api.github.com/repos/fastai/fastai/zipball/2.0.11",
+  "body": "2.0.11\r\n\r\n### Bugs Squashed\r\n\r\n- Fix `cont_cat_split` for multi-label classification ([#2759](https://github.com/fastai/fastai/issues/2759))\r\n- fastbook error: \"index 3 is out of bounds for dimension 0 with size 3\" ([#2792](https://github.com/fastai/fastai/issues/2792))"
+}
