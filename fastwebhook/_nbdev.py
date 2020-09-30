@@ -2,7 +2,8 @@
 
 __all__ = ["index", "modules", "custom_doc_links", "git_url"]
 
-index = {"tweet_text": "00_core.ipynb",
+index = {"gh_secret": "00_core.ipynb",
+         "tweet_text": "00_core.ipynb",
          "check_secret": "00_core.ipynb",
          "run_server": "00_core.ipynb"}
 
