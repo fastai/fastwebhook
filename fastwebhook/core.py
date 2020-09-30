@@ -50,7 +50,7 @@ class _RequestHandler(BaseHTTPRequestHandler):
             src_ip = ip_address(self.client_address[0])
             assert any((src_ip in wl) for wl in _whitelist)
         self.send_response(200)
-        self.end_heiiaders()
+        self.end_headers()
         content = self.rfile.read(int(self.headers.get('content-length')))
         payload = json.loads(content.decode())
         if payload['action']=='released':
