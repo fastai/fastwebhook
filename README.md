@@ -7,3 +7,4 @@ At this stage, this is only able to send tweets on software releases. It's very 
 ## How to use
 
 Run `fastwebhook` to run the web server. Pass `--help` for info about optional arguments.
+
