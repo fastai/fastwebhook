@@ -6,8 +6,11 @@ __all__ = ['tweet_text', 'check_secret', 'run_server']
 import json,tweepy,hmac,hashlib
 
 from pdb import set_trace
+from ipaddress import ip_address,ip_network
 from http.server import HTTPServer, BaseHTTPRequestHandler
 from fastcore.imports import *
+from fastcore.foundation import *
+from fastcore.utils import *
 from fastcore.script import *
 from configparser import ConfigParser
 
@@ -20,6 +23,7 @@ globals().update(**_cfg)
 _auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
 _auth.set_access_token(access_token, access_token_secret)
 _api = tweepy.API(_auth)
+_whitelist = L(urljson('https://api.github.com/meta')['hooks']).map(ip_network)
 
 # Cell
 def tweet_text(payload):
@@ -42,8 +46,11 @@ def check_secret(content, headers):
 # Cell
 class _RequestHandler(BaseHTTPRequestHandler):
     def do_POST(self):
+        if self.server.check_ip:
+            src_ip = ip_address(self.client_address[0])
+            assert any((src_ip in wl) for wl in _whitelist)
         self.send_response(200)
-        self.end_headers()
+        self.end_heiiaders()
         content = self.rfile.read(int(self.headers.get('content-length')))
         payload = json.loads(content.decode())
         if payload['action']=='released':
@@ -55,8 +62,11 @@ class _RequestHandler(BaseHTTPRequestHandler):
 
 # Cell
 @call_parse
-def run_server(hostname: Param("Host name or IP"  , str)='localhost',
-               port:     Param("Port to listen on", int)=8000):
+def run_server(hostname: Param("Host name or IP", str)='localhost',
+               port:     Param("Port to listen on", int)=8000,
+               check_ip: Param("Check source IP against GitHub list", bool_arg)=True):
     "Run a GitHub webhook server that tweets about new releases"
     print(f"Listening on {hostname}:{port}")
-    with HTTPServer((hostname, port), _RequestHandler) as httpd: httpd.serve_forever()
+    with HTTPServer((hostname, port), _RequestHandler) as httpd:
+        httpd.check_ip = check_ip
+        httpd.serve_forever()
