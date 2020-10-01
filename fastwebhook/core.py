@@ -65,6 +65,9 @@ def run_server(hostname: Param("Host name or IP", str)='localhost',
                inifile:  Param("Path to settings ini file", str)='twitter.ini',
                check_ip: Param("Check source IP against GitHub list", bool_arg)=True):
     "Run a GitHub webhook server that tweets about new releases"
+    os.environ['PYTHONUNBUFFERED'] = '1'
+    sys.stdout.reconfigure(line_buffering=True)
+    sys.stderr.reconfigure(line_buffering=True)
     print(f"Listening on {hostname}:{port}")
     assert os.path.exists(inifile), f"{inifile} not found"
     cfg = ConfigParser(interpolation=None)
