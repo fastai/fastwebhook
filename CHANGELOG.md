@@ -2,6 +2,17 @@
 
 <!-- do not remove -->
 
+## 0.0.9
+
+### New Features
+
+- add parameters to `fastwebhook_install`, and provide basic setup docs in README.md ([#7](https://github.com/fastai/fastwebhook/issues/7))
+
+### Bugs squashed
+
+- disable buffering so systemd journal works correctly
+
+
 ## 0.0.8
 
 ### New Features
