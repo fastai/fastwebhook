@@ -66,13 +66,14 @@ def run_server(hostname: Param("Host name or IP", str)='localhost',
                check_ip: Param("Check source IP against GitHub list", bool_arg)=True):
     "Run a GitHub webhook server that tweets about new releases"
     print(f"Listening on {hostname}:{port}")
+    assert os.path.exists(inifile), f"{inifile} not found"
+    cfg = ConfigParser(interpolation=None)
+    cfg.read([inifile])
+    cfg = cfg['DEFAULT']
+    auth = tweepy.OAuthHandler(cfg['consumer_key'], cfg['consumer_secret'])
+    auth.set_access_token(cfg['access_token'], cfg['access_token_secret'])
     with HTTPServer((hostname, port), _RequestHandler) as httpd:
-        cfg = ConfigParser(interpolation=None)
-        cfg.read([inifile])
-        cfg = cfg['DEFAULT']
         httpd.gh_secret = bytes(cfg['gh_secret'], 'utf-8')
-        auth = tweepy.OAuthHandler(cfg['consumer_key'], cfg['consumer_secret'])
-        auth.set_access_token(cfg['access_token'], cfg['access_token_secret'])
         httpd.api = tweepy.API(auth)
         httpd.whitelist = L(urljson('https://api.github.com/meta')['hooks']).map(ip_network)
         httpd.check_ip,httpd.debug = check_ip,debug
