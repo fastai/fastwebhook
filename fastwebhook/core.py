@@ -33,7 +33,7 @@ def check_sig(content, headers, secret):
 
 # Cell
 class _RequestHandler(BaseHTTPRequestHandler):
-    def do_POST(self):
+    def _post(self):
         if self.server.check_ip:
             src_ip = ip_address(self.client_address[0])
             assert any((src_ip in wl) for wl in self.server.whitelist)
@@ -50,6 +50,12 @@ class _RequestHandler(BaseHTTPRequestHandler):
             stat = self.server.api.update_status(tweet)
             print(stat.id)
         self.wfile.write('ok'.encode(encoding='utf_8'))
+
+    def do_POST(self):
+        try: self._post()
+        except Exception as e: sys.stderr.write(traceback.format_exc())
+
+    def log_message(self, fmt, *args): sys.stderr.write(fmt%args)
 
 # Cell
 @call_parse
@@ -77,18 +83,21 @@ import shutil
 
 # Cell
 @call_parse
-def install_service(check_ip: Param("Check source IP against GitHub list", bool_arg)=True,
-                   service_path: Param("Directory to write service file to", str)="/etc/systemd/system/"):
+def install_service(hostname: Param("Host name or IP", str)='0.0.0.0',
+                    port:     Param("Port to listen on", int)=8000,
+                    inifile:  Param("Path to settings ini file", str)='twitter.ini',
+                    check_ip: Param("Check source IP against GitHub list", bool_arg)=True,
+                    service_path: Param("Directory to write service file to", str)="/etc/systemd/system/"):
     "Install fastwebhook as a service"
     script_loc = shutil.which('fastwebhook')
-    ini_loc = Path('twitter.ini').absolute()
+    inifile = Path(inifile).absolute()
     _unitfile = f"""[Unit]
     Description=fastwebhook
     Wants=network-online.target
     After=network-online.target
 
     [Service]
-    ExecStart={script_loc} --inifile {ini_loc} --check_ip {check_ip}
+    ExecStart={script_loc} --inifile {inifile} --check_ip {check_ip} --hostname {hostname} --port {port}
     Restart=always
 
     [Install]
