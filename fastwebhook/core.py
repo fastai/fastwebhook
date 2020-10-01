@@ -27,8 +27,8 @@ def tweet_text(payload):
     return res[:279] + "…"
 
 # Cell
-def check_sig(content, headers):
-    digest = hmac.new(gh_secret, content, hashlib.sha1).hexdigest()
+def check_sig(content, headers, secret):
+    digest = hmac.new(secret, content, hashlib.sha1).hexdigest()
     assert f'sha1={digest}' == headers.get('X-Hub-Signature')
 
 # Cell
@@ -45,7 +45,7 @@ class _RequestHandler(BaseHTTPRequestHandler):
             return
         payload = json.loads(content.decode())
         if payload['action']=='released':
-            check_sig(content, self.headers)
+            check_sig(content, self.headers, self.server.gh_secret)
             tweet = tweet_text(payload)
             stat = self.server.api.update_status(tweet)
             print(stat.id)
