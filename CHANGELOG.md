@@ -2,6 +2,13 @@
 
 <!-- do not remove -->
 
+## 0.0.7
+
+### New Features
+
+- `fastwebhook_install` systemd installer ([#5](https://github.com/fastai/fastwebhook/issues/5))
+
+
 ## 0.0.6
 
 ### New Features
