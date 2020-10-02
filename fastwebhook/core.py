@@ -3,7 +3,7 @@
 __all__ = ['tweet_text', 'check_sig', 'run_server', 'install_service']
 
 # Cell
-import json,tweepy,hmac,hashlib,traceback
+import json,tweepy,hmac,hashlib,traceback,shutil
 
 from ipaddress import ip_address,ip_network
 from http.server import HTTPServer, BaseHTTPRequestHandler
@@ -83,9 +83,6 @@ def run_server(hostname: Param("Host name or IP", str)='localhost',
         httpd.serve_forever()
 
 # Cell
-import shutil
-
-# Cell
 @call_parse
 def install_service(hostname: Param("Host name or IP", str)='0.0.0.0',
                     port:     Param("Port to listen on", int)=8000,
@@ -107,4 +104,4 @@ def install_service(hostname: Param("Host name or IP", str)='0.0.0.0',
     [Install]
     WantedBy=multi-user.target"""
     Path("fastwebhook.service").write_text(_unitfile)
-    run_proc("sudo", "cp", "fastwebhook.service", service_path)
+    run(f"sudo cp fastwebhook.service {service_path}")
