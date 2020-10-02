@@ -6,7 +6,7 @@ __all__ = ['tweet_text', 'check_sig', 'run_server', 'install_service']
 import json,tweepy,hmac,hashlib,traceback,shutil
 
 from ipaddress import ip_address,ip_network
-from http.server import HTTPServer, BaseHTTPRequestHandler
+from http.server import ThreadingHTTPServer, BaseHTTPRequestHandler
 from fastcore.imports import *
 from fastcore.foundation import *
 from fastcore.utils import *
@@ -39,12 +39,14 @@ class _RequestHandler(BaseHTTPRequestHandler):
             assert any((src_ip in wl) for wl in self.server.whitelist)
         self.send_response(200)
         self.end_headers()
-        content = self.rfile.read(int(self.headers.get('content-length')))
+        length = self.headers.get('content-length')
+        if not length: return
+        content = self.rfile.read(int(length))
         if self.server.debug:
             print(self.headers)
             return
         payload = json.loads(content.decode())
-        if payload['action']=='released':
+        if payload.get('action',None)=='released':
             check_sig(content, self.headers, self.server.gh_secret)
             tweet = tweet_text(payload)
             stat = self.server.api.update_status(tweet)
@@ -58,6 +60,17 @@ class _RequestHandler(BaseHTTPRequestHandler):
     def log_message(self, fmt, *args): sys.stderr.write(fmt%args)
 
 # Cell
+class _Unbuffered:
+    def __init__(self, stream): self.stream = stream
+    def __getattr__(self, attr): return getattr(self.stream, attr)
+    def write(self, data):
+        self.stream.write(data)
+        self.stream.flush()
+    def writelines(self, datas):
+        self.stream.writelines(datas)
+        self.stream.flush()
+
+# Cell
 @call_parse
 def run_server(hostname: Param("Host name or IP", str)='localhost',
                port:     Param("Port to listen on", int)=8000,
@@ -66,8 +79,13 @@ def run_server(hostname: Param("Host name or IP", str)='localhost',
                check_ip: Param("Check source IP against GitHub list", bool_arg)=True):
     "Run a GitHub webhook server that tweets about new releases"
     os.environ['PYTHONUNBUFFERED'] = '1'
-    sys.stdout.reconfigure(line_buffering=True)
-    sys.stderr.reconfigure(line_buffering=True)
+    if hasattr(sys.stdout, 'reconfigure'):
+        #py37+
+        sys.stdout.reconfigure(line_buffering=True)
+        sys.stderr.reconfigure(line_buffering=True)
+    else:
+        sys.stdout = _Unbuffered(sys.stdout)
+        sys.stderr = _Unbuffered(sys.stderr)
     print(f"Listening on {hostname}:{port}")
     assert os.path.exists(inifile), f"{inifile} not found"
     cfg = ConfigParser(interpolation=None)
@@ -75,7 +93,7 @@ def run_server(hostname: Param("Host name or IP", str)='localhost',
     cfg = cfg['DEFAULT']
     auth = tweepy.OAuthHandler(cfg['consumer_key'], cfg['consumer_secret'])
     auth.set_access_token(cfg['access_token'], cfg['access_token_secret'])
-    with HTTPServer((hostname, port), _RequestHandler) as httpd:
+    with ThreadingHTTPServer((hostname, port), _RequestHandler) as httpd:
         httpd.gh_secret = bytes(cfg['gh_secret'], 'utf-8')
         httpd.api = tweepy.API(auth)
         httpd.whitelist = L(urljson('https://api.github.com/meta')['hooks']).map(ip_network)
