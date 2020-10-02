@@ -3,7 +3,7 @@
 __all__ = ['tweet_text', 'check_sig', 'run_server', 'install_service']
 
 # Cell
-import json,tweepy,hmac,hashlib
+import json,tweepy,hmac,hashlib,traceback
 
 from ipaddress import ip_address,ip_network
 from http.server import HTTPServer, BaseHTTPRequestHandler
