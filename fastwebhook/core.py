@@ -40,7 +40,7 @@ class UnbufferedServer(ThreadingHTTPServer):
         print(f"Listening on {self.server_address}")
 
     def server_close(self):
-        time.sleep(0.3) # wait for last request to finish
+        time.sleep(0.5) # wait for last request to finish
         sys.stdout,sys.stderr = self.oldout,self.olderr
         os.environ['PYTHONUNBUFFERED'] = self.oldunbuf
 
