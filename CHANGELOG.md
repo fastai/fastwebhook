@@ -2,6 +2,14 @@
 
 <!-- do not remove -->
 
+## 0.0.13
+
+### New Features
+
+- Factor out `UnbufferedServer` base class ([#8](https://github.com/fastai/fastwebhook/issues/8))
+- can specify hostname, etc params to `fastwebhook_install` ([#6](https://github.com/fastai/fastwebhook/issues/6))
+
+
 ## 0.0.12
 
 ### New Features
