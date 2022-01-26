@@ -77,12 +77,20 @@ def reconfig(s):
 
 # Cell
 @call_parse
-def run_server(hostname: Param("Host name or IP", str)='localhost',
-               port:     Param("Port to listen on", int)=8000,
-               debug:    Param("If True, do not trigger actions, just print", bool_arg)=False,
-               inifile:  Param("Path to settings ini file", str)='twitter.ini',
-               check_ip: Param("Check source IP against GitHub list", bool_arg)=True,
-               single_request: Param("Handle one request", bool_arg)=False):
+def run_server(
+    # Host name or IP
+    hostname:str='localhost',
+    # Port to listen on
+    port:int=8000,
+    # If True, do not trigger actions, just print
+    debug:bool_arg=False,
+    # Path to settings ini file
+    inifile:str='twitter.ini',
+    # Check source IP against GitHub list
+    check_ip:bool_arg=True,
+    # Handle one request
+    single_request:bool_arg=False
+):
     "Run a GitHub webhook server that tweets about new releases"
     assert os.path.exists(inifile), f"{inifile} not found"
     cfg = ConfigParser(interpolation=None)
@@ -105,11 +113,18 @@ def run_server(hostname: Param("Host name or IP", str)='localhost',
 
 # Cell
 @call_parse
-def fastwebhook_install_service(hostname: Param("Host name or IP", str)='0.0.0.0',
-                    port:     Param("Port to listen on", int)=8000,
-                    inifile:  Param("Path to settings ini file", str)='twitter.ini',
-                    check_ip: Param("Check source IP against GitHub list", bool_arg)=True,
-                    service_path: Param("Directory to write service file to", str)="/etc/systemd/system/"):
+def fastwebhook_install_service(
+    # Host name or IP
+    hostname:str='0.0.0.0',
+    # Port to listen on
+    port:int=8000,
+    # Path to settings ini file
+    inifile:str='twitter.ini',
+    # Check source IP against GitHub list
+    check_ip:bool_arg=True,
+    # Directory to write service file to
+    service_path:str="/etc/systemd/system/"
+):
     "Install fastwebhook as a service"
     script_loc = shutil.which('fastwebhook')
     inifile = Path(inifile).absolute()
