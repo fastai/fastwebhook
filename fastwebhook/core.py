@@ -77,12 +77,14 @@ def reconfig(s):
 
 # Cell
 @call_parse
-def run_server(hostname: Param("Host name or IP", str)='localhost',
-               port:     Param("Port to listen on", int)=8000,
-               debug:    Param("If True, do not trigger actions, just print", bool_arg)=False,
-               inifile:  Param("Path to settings ini file", str)='twitter.ini',
-               check_ip: Param("Check source IP against GitHub list", bool_arg)=True,
-               single_request: Param("Handle one request", bool_arg)=False):
+def run_server(
+    hostname:str='localhost',  # Host name or IP
+    port:int=8000,  # Port to listen on
+    debug:bool_arg=False,  # If True, do not trigger actions, just print
+    inifile:str='twitter.ini',  # Path to settings ini file
+    check_ip:bool_arg=True,  # Check source IP against GitHub list
+    single_request:bool_arg=False  # Handle one request
+):
     "Run a GitHub webhook server that tweets about new releases"
     assert os.path.exists(inifile), f"{inifile} not found"
     cfg = ConfigParser(interpolation=None)
@@ -105,11 +107,13 @@ def run_server(hostname: Param("Host name or IP", str)='localhost',
 
 # Cell
 @call_parse
-def fastwebhook_install_service(hostname: Param("Host name or IP", str)='0.0.0.0',
-                    port:     Param("Port to listen on", int)=8000,
-                    inifile:  Param("Path to settings ini file", str)='twitter.ini',
-                    check_ip: Param("Check source IP against GitHub list", bool_arg)=True,
-                    service_path: Param("Directory to write service file to", str)="/etc/systemd/system/"):
+def fastwebhook_install_service(
+    hostname:str='0.0.0.0',  # Host name or IP
+    port:int=8000,  # Port to listen on
+    inifile:str='twitter.ini',  # Path to settings ini file
+    check_ip:bool_arg=True,  # Check source IP against GitHub list
+    service_path:str="/etc/systemd/system/"  # Directory to write service file to
+):
     "Install fastwebhook as a service"
     script_loc = shutil.which('fastwebhook')
     inifile = Path(inifile).absolute()
