@@ -53,9 +53,9 @@ nb_path: "00_core.ipynb"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="ReuseThreadingServer" class="doc_header"><code>class</code> <code>ReuseThreadingServer</code><a href="https://github.com/fastai/fastwebhook/tree/master/fastwebhook/core.py#L22" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>ReuseThreadingServer</code>(<strong><code>server_address</code></strong>, <strong><code>RequestHandlerClass</code></strong>, <strong><code>bind_and_activate</code></strong>=<em><code>True</code></em>) :: <code>ThreadingTCPServer</code></p>
+<h4 id="clean_tweet_body" class="doc_header"><code>clean_tweet_body</code><a href="https://github.com/fastai/fastwebhook/tree/master/fastwebhook/core.py#L24" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>clean_tweet_body</code>(<strong><code>body</code></strong>)</p>
 </blockquote>
-<p>Mix-in class to handle each request in a new thread.</p>
+<p>Cleans links and sets proper @'s in the tweet body</p>
 
 </div>
 
@@ -85,7 +85,7 @@ nb_path: "00_core.ipynb"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="tweet_text" class="doc_header"><code>tweet_text</code><a href="https://github.com/fastai/fastwebhook/tree/master/fastwebhook/core.py#L25" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>tweet_text</code>(<strong><code>payload</code></strong>)</p>
+<h4 id="tweet_text" class="doc_header"><code>tweet_text</code><a href="https://github.com/fastai/fastwebhook/tree/master/fastwebhook/core.py#L40" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>tweet_text</code>(<strong><code>payload</code></strong>)</p>
 </blockquote>
 <p>Send a tweet announcing release based on <code>payload</code></p>
 
@@ -117,7 +117,7 @@ nb_path: "00_core.ipynb"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="check_sig" class="doc_header"><code>check_sig</code><a href="https://github.com/fastai/fastwebhook/tree/master/fastwebhook/core.py#L37" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>check_sig</code>(<strong><code>content</code></strong>, <strong><code>headers</code></strong>, <strong><code>secret</code></strong>)</p>
+<h4 id="check_sig" class="doc_header"><code>check_sig</code><a href="https://github.com/fastai/fastwebhook/tree/master/fastwebhook/core.py#L52" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>check_sig</code>(<strong><code>content</code></strong>, <strong><code>headers</code></strong>, <strong><code>secret</code></strong>)</p>
 </blockquote>
 
 </div>
@@ -155,7 +155,7 @@ nb_path: "00_core.ipynb"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="reconfig" class="doc_header"><code>reconfig</code><a href="https://github.com/fastai/fastwebhook/tree/master/fastwebhook/core.py#L72" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>reconfig</code>(<strong><code>s</code></strong>)</p>
+<h4 id="reconfig" class="doc_header"><code>reconfig</code><a href="https://github.com/fastai/fastwebhook/tree/master/fastwebhook/core.py#L87" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>reconfig</code>(<strong><code>s</code></strong>)</p>
 </blockquote>
 
 </div>
@@ -186,9 +186,56 @@ nb_path: "00_core.ipynb"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="run_server" class="doc_header"><code>run_server</code><a href="https://github.com/fastai/fastwebhook/tree/master/fastwebhook/core.py#L81" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>run_server</code>(<strong><code>hostname</code></strong>:"Host name or IP"=<em><code>'localhost'</code></em>, <strong><code>port</code></strong>:"Port to listen on"=<em><code>8000</code></em>, <strong><code>debug</code></strong>:"If True, do not trigger actions, just print"=<em><code>False</code></em>, <strong><code>inifile</code></strong>:"Path to settings ini file"=<em><code>'twitter.ini'</code></em>, <strong><code>check_ip</code></strong>:"Check source IP against GitHub list"=<em><code>True</code></em>, <strong><code>single_request</code></strong>:"Handle one request"=<em><code>False</code></em>)</p>
+<h4 id="run_server" class="doc_header"><code>run_server</code><a href="https://github.com/fastai/fastwebhook/tree/master/fastwebhook/core.py#L96" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>run_server</code>(<strong><code>hostname</code></strong>:<code>str</code>=<em><code>'localhost'</code></em>, <strong><code>port</code></strong>:<code>int</code>=<em><code>8000</code></em>, <strong><code>debug</code></strong>:<code>bool_arg</code>=<em><code>False</code></em>, <strong><code>inifile</code></strong>:<code>str</code>=<em><code>'twitter.ini'</code></em>, <strong><code>check_ip</code></strong>:<code>bool_arg</code>=<em><code>True</code></em>, <strong><code>single_request</code></strong>:<code>bool_arg</code>=<em><code>False</code></em>)</p>
 </blockquote>
 <p>Run a GitHub webhook server that tweets about new releases</p>
+<table>
+<thead><tr>
+<th></th>
+<th>Type</th>
+<th>Default</th>
+<th>Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong><code>hostname</code></strong></td>
+<td><code>str</code></td>
+<td><code>localhost</code></td>
+<td>Host name or IP</td>
+</tr>
+<tr>
+<td><strong><code>port</code></strong></td>
+<td><code>int</code></td>
+<td><code>8000</code></td>
+<td>Port to listen on</td>
+</tr>
+<tr>
+<td><strong><code>debug</code></strong></td>
+<td><code>bool_arg</code></td>
+<td><code>False</code></td>
+<td>If True, do not trigger actions, just print</td>
+</tr>
+<tr>
+<td><strong><code>inifile</code></strong></td>
+<td><code>str</code></td>
+<td><code>twitter.ini</code></td>
+<td>Path to settings ini file</td>
+</tr>
+<tr>
+<td><strong><code>check_ip</code></strong></td>
+<td><code>bool_arg</code></td>
+<td><code>True</code></td>
+<td>Check source IP against GitHub list</td>
+</tr>
+<tr>
+<td><strong><code>single_request</code></strong></td>
+<td><code>bool_arg</code></td>
+<td><code>False</code></td>
+<td>Handle one request</td>
+</tr>
+</tbody>
+</table>
 
 </div>
 
@@ -228,8 +275,7 @@ nb_path: "00_core.ipynb"
 <div class="output_area">
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>Listening on (&#39;localhost&#39;, 8000)
-</pre>
+<pre>Listening on (&#39;localhost&#39;, 8000)</pre>
 </div>
 </div>
 
@@ -260,7 +306,8 @@ nb_path: "00_core.ipynb"
 <div class="output_area">
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>Accept-Encoding: identity
+<pre>
+Accept-Encoding: identity
 Content-Type: application/x-www-form-urlencoded
 Content-Length: 6
 Host: localhost:8000
@@ -305,9 +352,50 @@ Connection: close
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="fastwebhook_install_service" class="doc_header"><code>fastwebhook_install_service</code><a href="https://github.com/fastai/fastwebhook/tree/master/fastwebhook/core.py#L109" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>fastwebhook_install_service</code>(<strong><code>hostname</code></strong>:"Host name or IP"=<em><code>'0.0.0.0'</code></em>, <strong><code>port</code></strong>:"Port to listen on"=<em><code>8000</code></em>, <strong><code>inifile</code></strong>:"Path to settings ini file"=<em><code>'twitter.ini'</code></em>, <strong><code>check_ip</code></strong>:"Check source IP against GitHub list"=<em><code>True</code></em>, <strong><code>service_path</code></strong>:"Directory to write service file to"=<em><code>'/etc/systemd/system/'</code></em>)</p>
+<h4 id="fastwebhook_install_service" class="doc_header"><code>fastwebhook_install_service</code><a href="https://github.com/fastai/fastwebhook/tree/master/fastwebhook/core.py#L126" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>fastwebhook_install_service</code>(<strong><code>hostname</code></strong>:<code>str</code>=<em><code>'0.0.0.0'</code></em>, <strong><code>port</code></strong>:<code>int</code>=<em><code>8000</code></em>, <strong><code>inifile</code></strong>:<code>str</code>=<em><code>'twitter.ini'</code></em>, <strong><code>check_ip</code></strong>:<code>bool_arg</code>=<em><code>True</code></em>, <strong><code>service_path</code></strong>:<code>str</code>=<em><code>'/etc/systemd/system/'</code></em>)</p>
 </blockquote>
 <p>Install fastwebhook as a service</p>
+<table>
+<thead><tr>
+<th></th>
+<th>Type</th>
+<th>Default</th>
+<th>Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong><code>hostname</code></strong></td>
+<td><code>str</code></td>
+<td><code>0.0.0.0</code></td>
+<td>Host name or IP</td>
+</tr>
+<tr>
+<td><strong><code>port</code></strong></td>
+<td><code>int</code></td>
+<td><code>8000</code></td>
+<td>Port to listen on</td>
+</tr>
+<tr>
+<td><strong><code>inifile</code></strong></td>
+<td><code>str</code></td>
+<td><code>twitter.ini</code></td>
+<td>Path to settings ini file</td>
+</tr>
+<tr>
+<td><strong><code>check_ip</code></strong></td>
+<td><code>bool_arg</code></td>
+<td><code>True</code></td>
+<td>Check source IP against GitHub list</td>
+</tr>
+<tr>
+<td><strong><code>service_path</code></strong></td>
+<td><code>str</code></td>
+<td><code>/etc/systemd/system/</code></td>
+<td>Directory to write service file to</td>
+</tr>
+</tbody>
+</table>
 
 </div>
 
