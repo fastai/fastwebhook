@@ -2,6 +2,14 @@
 
 <!-- do not remove -->
 
+## 0.0.15
+
+### New Features
+
+- [Enhancement] Clean up tweet body and @ mentions ([#44](https://github.com/fastai/fastwebhook/pull/44)), thanks to [@muellerzr](https://github.com/muellerzr)
+- Use docments ([#37](https://github.com/fastai/fastwebhook/pull/37)), thanks to [@muellerzr](https://github.com/muellerzr)
+
+
 ## 0.0.13
 
 ### New Features
