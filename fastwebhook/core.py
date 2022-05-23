@@ -51,7 +51,9 @@ def tweet_text(payload):
 # Cell
 def check_sig(content, headers, secret):
     digest = hmac.new(secret, content, hashlib.sha1).hexdigest()
-    assert f'sha1={digest}' == headers.get('X-Hub-Signature')
+    if f'sha1={digest}' == headers.get('X-Hub-Signature'): return True
+    self.wfile.write(b'mismatch')
+    return False
 
 # Cell
 class _RequestHandler(MinimalHTTPHandler):
@@ -70,11 +72,11 @@ class _RequestHandler(MinimalHTTPHandler):
             print(self.headers, content)
             return
         payload = json.loads(content.decode())
-        if payload.get('action',None)=='released':
-            check_sig(content, self.headers, self.server.gh_secret)
-            tweet = tweet_text(payload)
-            stat = self.server.api.update_status(tweet)
-            print(stat.id)
+        if payload.get('action',None)!='released': return
+        if not check_sig(content, self.headers, self.server.gh_secret): return
+        tweet = tweet_text(payload)
+        stat = self.server.api.update_status(tweet)
+        self.wfile.write(f'{stat.id}'.encode())
         self.wfile.write(b'ok')
 
     def handle(self):
